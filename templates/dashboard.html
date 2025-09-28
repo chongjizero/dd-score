@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nasdaq-100 Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">Nasdaq-100 Drawdown Dashboard</h1>
+        
+        <!-- Statistics Board -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Min Drawdown Statistics</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <h5>Daily Change</h5>
+                        <p>{{ stats.daily_change | float | round(2) if stats.daily_change != 'N/A' else 'N/A' }}%</p>
+                    </div>
+                    <div class="col-md-2">
+                        <h5>Current Drawdown</h5>
+                        <p>{{ stats.current_drawdown | float | round(2) if stats.current_drawdown != 'N/A' else 'N/A' }}%</p>
+                    </div>
+                    <div class="col-md-2">
+                        <h5>Last Section Min-DD</h5>
+                        <p>{{ stats.last_min_dd | float | round(2) if stats.last_min_dd != 'N/A' else 'N/A' }}%</p>
+                    </div>
+                    <div class="col-md-2">
+                        <h5>Last Section Percentile</h5>
+                        <p>{{ stats.last_percentile | float | round(2) if stats.last_percentile != 'N/A' else 'N/A' }}%</p>
+                    </div>
+                    <div class="col-md-2">
+                        <h5>10th Percentile</h5>
+                        <p>{{ stats.percentile_10 | float | round(2) if stats.percentile_10 != 'N/A' else 'N/A' }}%</p>
+                    </div>
+                    <div class="col-md-2">
+                        <h5>1st Percentile</h5>
+                        <p>{{ stats.percentile_1 | float | round(2) if stats.percentile_1 != 'N/A' else 'N/A' }}%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Charts -->
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Nasdaq-100 Index</h3>
+                <img src="data:image/png;base64,{{ nasdaq_plot }}" class="img-fluid" alt="Nasdaq Plot">
+            </div>
+            <div class="col-md-6">
+                <h3>Drawdown</h3>
+                <img src="data:image/png;base64,{{ dd_plot }}" class="img-fluid" alt="Drawdown Plot">
+            </div>
+        </div>
+        
+    </div>
+</body>
+</html>
