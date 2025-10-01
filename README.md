@@ -87,6 +87,15 @@ http://localhost:5000
 ## 문제 해결
 
 ```bash
+# docker 빌드
+docker build --no-cache -t dd-score:latest .
+
+# 볼륨 생성
+docker volume create dd-score-data
+
+# 컨테이너 실행
+docker run -d --name dd-score -p 5000:5000 --env-file .env -v dd-score-data:/app/data dd-score
+
 # 컨테이너 로그 확인
 docker logs -f dd-score
 
