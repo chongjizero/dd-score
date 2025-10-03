@@ -28,23 +28,24 @@ if [ ! -z "$STOPPED_CONTAINER" ]; then
     echo -e "${GREEN}컨테이너가 제거되었습니다.${NC}"
 fi
 
-# 로컬 데이터 디렉토리 삭제 여부 확인
+# Docker 볼륨 삭제 여부 확인
+VOLUME_NAME="dd-score-data"
 echo ""
-echo -e "${YELLOW}로컬 데이터 디렉토리(./data)를 삭제하시겠습니까?${NC}"
+echo -e "${YELLOW}Docker 볼륨($VOLUME_NAME)을 삭제하시겠습니까?${NC}"
 echo -e "${RED}주의: 삭제하면 저장된 모든 데이터(nasdaq100_data.csv, min_dd_per_section.csv)가 삭제됩니다!${NC}"
 echo -e "${YELLOW}y/N (기본값: N): ${NC}"
-read -r DELETE_DATA
+read -r DELETE_VOLUME
 
-if [[ $DELETE_DATA =~ ^[Yy]$ ]]; then
-    if [ -d "./data" ]; then
-        echo -e "${RED}로컬 데이터 디렉토리 './data' 삭제 중...${NC}"
-        rm -rf ./data
-        echo -e "${RED}데이터 디렉토리가 삭제되었습니다.${NC}"
+if [[ $DELETE_VOLUME =~ ^[Yy]$ ]]; then
+    if [ ! -z "$(docker volume ls -q -f name=$VOLUME_NAME)" ]; then
+        echo -e "${RED}Docker 볼륨 '$VOLUME_NAME' 삭제 중...${NC}"
+        docker volume rm $VOLUME_NAME
+        echo -e "${RED}Docker 볼륨이 삭제되었습니다.${NC}"
     else
-        echo -e "${YELLOW}삭제할 데이터 디렉토리가 없습니다.${NC}"
+        echo -e "${YELLOW}삭제할 Docker 볼륨이 없습니다.${NC}"
     fi
 else
-    echo -e "${GREEN}데이터 디렉토리를 보존합니다. 데이터가 유지됩니다.${NC}"
+    echo -e "${GREEN}Docker 볼륨을 보존합니다. 데이터가 유지됩니다.${NC}"
 fi
 
 # Docker 볼륨 정리 (사용하지 않는 볼륨들)

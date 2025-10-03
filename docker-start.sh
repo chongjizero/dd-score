@@ -45,14 +45,15 @@ set -a
 source .env
 set +a
 
-# 로컬 데이터 디렉토리 확인 및 생성
-echo -e "${BLUE}로컬 데이터 디렉토리 확인 중...${NC}"
-if [ ! -d "./data" ]; then
-    echo -e "${GREEN}로컬 데이터 디렉토리 './data' 생성 중...${NC}"
-    mkdir -p ./data
-    echo -e "${GREEN}데이터 디렉토리가 생성되었습니다.${NC}"
+# Docker 볼륨 확인 및 생성
+VOLUME_NAME="dd-score-data"
+echo -e "${BLUE}Docker 볼륨 확인 중...${NC}"
+if [ -z "$(docker volume ls -q -f name=$VOLUME_NAME)" ]; then
+    echo -e "${GREEN}Docker 볼륨 '$VOLUME_NAME' 생성 중...${NC}"
+    docker volume create $VOLUME_NAME
+    echo -e "${GREEN}Docker 볼륨이 생성되었습니다.${NC}"
 else
-    echo -e "${GREEN}기존 데이터 디렉토리 './data' 사용 (데이터 보존됨)${NC}"
+    echo -e "${GREEN}기존 Docker 볼륨 '$VOLUME_NAME' 사용 (데이터 보존됨)${NC}"
 fi
 
 # 컨테이너 시작
@@ -61,7 +62,7 @@ docker run -d \
     --name $CONTAINER_NAME \
     --restart unless-stopped \
     -p 5000:5000 \
-    -v "$(pwd)/data":/app/data \
+    -v $VOLUME_NAME:/app/data \
     -e SENDER_EMAIL="$SENDER_EMAIL" \
     -e SENDER_PASSWORD="$SENDER_PASSWORD" \
     -e RECEIVER_EMAIL="$RECEIVER_EMAIL" \
@@ -77,7 +78,7 @@ if [ $? -eq 0 ]; then
     echo ""
     echo -e "${GREEN}서비스 정보:${NC}"
     echo -e "  대시보드 URL: ${BLUE}http://localhost:5000${NC}"
-    echo -e "  데이터 디렉토리: ${BLUE}$(pwd)/data${NC} (로컬 데이터 보존됨)"
+    echo -e "  데이터 볼륨: ${BLUE}$VOLUME_NAME${NC} (Docker 볼륨에 데이터 보존됨)"
     echo -e "  자동 업데이트: ${BLUE}매일 오전 9시${NC}"
     echo ""
     echo -e "${YELLOW}컨테이너 로그 확인: ${NC}docker logs -f $CONTAINER_NAME"
