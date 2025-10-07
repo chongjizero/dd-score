@@ -25,11 +25,11 @@
                         <p>{{ stats.current_drawdown | float | round(2) if stats.current_drawdown != 'N/A' else 'N/A' }}%</p>
                     </div>
                     <div class="col-md-2">
-                        <h5>Last Section Min-DD</h5>
+                        <h5>Last Sect. Min-DD</h5>
                         <p>{{ stats.last_min_dd | float | round(2) if stats.last_min_dd != 'N/A' else 'N/A' }}%</p>
                     </div>
                     <div class="col-md-2">
-                        <h5>Last Section Percentile</h5>
+                        <h5>Last Sect. Percentrank</h5>
                         <p>{{ stats.last_percentile | float | round(2) if stats.last_percentile != 'N/A' else 'N/A' }}%</p>
                     </div>
                     <div class="col-md-2">
